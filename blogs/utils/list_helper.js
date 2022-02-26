@@ -33,7 +33,22 @@ const mostBlogs = (blogs) => {
     }
 };
 
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) return null
+    const reducer = (authorLikeMap, blog) => {
+        return authorLikeMap[blog.author] === undefined ?
+            { ...authorLikeMap, [blog.author]: blog.likes } :
+            { ...authorLikeMap, [blog.author]: authorLikeMap[blog.author] + blog.likes }
+    }
+    const authorLikeCount = blogs.reduce( reducer, {} )
+    const authorWithHighestLikes = Object.keys(authorLikeCount)
+        .sort( (a1, a2) => authorLikeCount[a2] - authorLikeCount[a1] )[0];
+    return {
+        author: authorWithHighestLikes,
+        likes: authorLikeCount[authorWithHighestLikes]
+    }
+};
 
 module.exports = {
-    dummy, countLikes, favoriteBlog, mostBlogs
+    dummy, countLikes, favoriteBlog, mostBlogs, mostLikes
 }
